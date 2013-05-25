@@ -813,15 +813,12 @@ public class GObject implements GPaintable, GObjectHolder {
 	private void paintSandboxed(GPaintable object, Graphics2D g) {
 		// Sandbox the graphics.
 		Graphics2D sandbox = (Graphics2D) g.create();
+		
+		// Clip it - stay within the lines.
+		sandbox.clipRect(0, 0, getIntWidth(), getIntHeight());
 
 		// Perform preliminary transforms, modifications, etc.
 		object.preparePaint(sandbox);
-		
-		// If we have a parent, clip the paint.
-		if (parent != null) {
-			// Clip it - stay within the lines.
-			sandbox.clipRect(0, 0, parent.getIntWidth(), parent.getIntHeight());
-		}
 
 		// Go to town.
 		object.paint(sandbox);
