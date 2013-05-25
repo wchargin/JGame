@@ -86,7 +86,8 @@ public abstract class ButtonListener implements Listener {
 			// Nothing happening currently. Has this changed?
 			if (context.isMouseInScreen()
 					&& target.getAbsoluteBoundingShape().contains(
-							context.getMouseAbsolute())) {
+							context.getMouseAbsolute())
+					&& !isValidButton(context.getMouseButtonMask())) {
 				// The user is hovering the button.
 				// The mouse is hovered over the button.
 				// Update the buttonState.
@@ -94,16 +95,6 @@ public abstract class ButtonListener implements Listener {
 
 				// Call the listener function.
 				mouseOver(context);
-
-				// It's also possible that the user is incredibly fast (faster
-				// than frame rate) and has already clicked. Check for that,
-				// too.
-				if (isValidButton(context.getMouseButtonMask())) {
-					// A button is pressed.
-					// Change the buttonState again.
-					buttonState = ButtonState.PRESSED;
-					mouseDown(context);
-				}
 
 			} // else nothing happened
 			break;
@@ -134,9 +125,8 @@ public abstract class ButtonListener implements Listener {
 
 		case PRESSED:
 			// The user is currently pressing the button. Has this changed?
-			if (context.getMouseButtonMask() == MouseEvent.NOBUTTON) {
+			if (!isValidButton(context.getMouseButtonMask())) {
 				// The user is no longer pressing the mouse button.
-				buttonState = ButtonState.NONE;
 
 				// Did the user click this button?
 				// (i.e., is the mouse still over it?)
@@ -144,9 +134,11 @@ public abstract class ButtonListener implements Listener {
 						&& target.getAbsoluteBoundingShape().contains(
 								context.getMouseAbsolute())) {
 					// We have a winner!
+					buttonState = ButtonState.HOVERED;
 					mouseClicked(context);
 				} else {
 					// The user decided not to complete the click.
+					buttonState = ButtonState.NONE;
 					mouseOut(context);
 				}
 			}
