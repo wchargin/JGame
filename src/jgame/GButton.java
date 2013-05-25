@@ -189,8 +189,6 @@ public class GButton extends GObject implements GAnimatable {
 
 	@Override
 	public void paint(Graphics2D g) {
-		super.paint(g);
-
 		// Get the current sprite.
 		GSprite sprite = getSpriteForState(currentState);
 
@@ -199,6 +197,9 @@ public class GButton extends GObject implements GAnimatable {
 			// We can paint.
 			sprite.paint(g);
 		}
+		
+		// Paint children.
+		super.paint(g);
 	}
 
 	@Override
