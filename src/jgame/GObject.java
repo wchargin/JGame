@@ -819,6 +819,12 @@ public class GObject implements GPaintable, GObjectHolder {
 
 		// Perform preliminary transforms, modifications, etc.
 		object.preparePaint(sandbox);
+<<<<<<< HEAD
+=======
+
+		// Clip it - stay within the lines.
+		sandbox.clipRect(0, 0, getIntWidth(), getIntHeight());
+>>>>>>> 6f6271a376098faccadcfeff5796f3fa95b08074
 
 		// Go to town.
 		object.paint(sandbox);
