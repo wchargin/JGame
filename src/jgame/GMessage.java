@@ -2,6 +2,7 @@ package jgame;
 
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.FontMetrics;
 import java.awt.Graphics2D;
 
 /**
@@ -31,6 +32,16 @@ public class GMessage extends GObject {
 	private String text;
 
 	/**
+	 * The horizontal alignment. {@code 0} is left; {@code 1} is right.
+	 */
+	private double alignmentX;
+
+	/**
+	 * The vertical alignment. {@code 0} is top; {@code 1} is bottom.
+	 */
+	private double alignmentY;
+
+	/**
 	 * Creates a message with the default settings.
 	 */
 	public GMessage() {
@@ -45,11 +56,29 @@ public class GMessage extends GObject {
 	 * Creates a message with the given text.
 	 * 
 	 * @param text
-	 *            the tex for this message
+	 *            the text for this message
 	 */
 	public GMessage(String text) {
 		this();
 		this.text = text;
+	}
+
+	/**
+	 * Gets the horizontal alignment.
+	 * 
+	 * @return the horizontal alignment
+	 */
+	public double getAlignmentX() {
+		return alignmentX;
+	}
+
+	/**
+	 * Gets the vertical alignment.
+	 * 
+	 * @return the vertical alignment
+	 */
+	public double getAlignmentY() {
+		return alignmentY;
 	}
 
 	/**
@@ -101,16 +130,56 @@ public class GMessage extends GObject {
 
 	@Override
 	public void paint(Graphics2D g) {
-		super.paint(g);
+		// Set up graphics for text rendering.
 		g.setColor(color);
 		g.setFont(font);
-		g.drawString(text, 0, g.getFontMetrics().getAscent());
+
+		// Get metrics.
+		FontMetrics fm = g.getFontMetrics();
+
+		// Calculate dimensions.
+		int w = fm.stringWidth(text);
+		int h = fm.getAscent();
+
+		// How much extra space is there?
+		double extraX = getWidth() - w;
+		double extraY = getHeight() - h;
+
+		// Adjust for alignment.
+		double x = extraX * alignmentX;
+		double y = extraY * alignmentY + h; // add h because it's baseline-based
+
+		// Paint.
+		g.drawString(text, (int) x, (int) y);
+
+		// Paint children.
+		super.paint(g);
 	}
 
 	@Override
 	public void preparePaint(Graphics2D g) {
 		super.preparePaint(g);
 		antialias(g);
+	}
+
+	/**
+	 * Sets the horizontal alignment. {@code 0} is left; {@code 1} is right.
+	 * 
+	 * @param alignmentX
+	 *            the new horizontal alignment
+	 */
+	public void setAlignmentX(double alignmentX) {
+		this.alignmentX = alignmentX;
+	}
+
+	/**
+	 * Sets the vertical alignment. {@code 0} is top; {@code 1} is bottom.
+	 * 
+	 * @param alignmentY
+	 *            the new vertical alignment
+	 */
+	public void setAlignmentY(double alignmentY) {
+		this.alignmentY = alignmentY;
 	}
 
 	/**
