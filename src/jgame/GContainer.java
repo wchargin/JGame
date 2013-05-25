@@ -149,7 +149,7 @@ public class GContainer extends GObject implements GObjectHolder, GAnimatable {
 		// Perform a null-check.
 		if (backgroundSprite != null) {
 			// Link sizes.
-			backgroundSprite.setSize(getWidth(), getHeight());
+			setSize(backgroundSprite.getWidth(), backgroundSprite.getHeight());
 		}
 	}
 
