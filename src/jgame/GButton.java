@@ -277,4 +277,37 @@ public class GButton extends GObject implements GAnimatable {
 		listener.setValidButtonMask(validButtonMask);
 	}
 
+	@Override
+	public void setWidth(double w) throws IllegalArgumentException {
+		// Set the width.
+		super.setWidth(w);
+
+		// Also set the width for all sprites.
+		for (GSprite sprite : sprites.values()) {
+			sprite.setWidth(w);
+		}
+	}
+
+	@Override
+	public void setHeight(double h) throws IllegalArgumentException {
+		// Set the height.
+		super.setHeight(h);
+
+		// Also set the height for all sprites.
+		for (GSprite sprite : sprites.values()) {
+			sprite.setHeight(h);
+		}
+	}
+
+	@Override
+	public void setSize(double w, double h) throws IllegalArgumentException {
+		// Set the size.
+		super.setSize(w, h);
+
+		// Also set the size for all sprites.
+		for (GSprite sprite : sprites.values()) {
+			sprite.setSize(w, h);
+		}
+	}
+
 }
