@@ -197,7 +197,7 @@ public class GButton extends GObject implements GAnimatable {
 			// We can paint.
 			sprite.paint(g);
 		}
-		
+
 		// Paint children.
 		super.paint(g);
 	}
@@ -234,6 +234,17 @@ public class GButton extends GObject implements GAnimatable {
 	}
 
 	@Override
+	public void setHeight(double h) throws IllegalArgumentException {
+		// Set the height.
+		super.setHeight(h);
+
+		// Also set the height for all sprites.
+		for (GSprite sprite : sprites.values()) {
+			sprite.setHeight(h);
+		}
+	}
+
+	@Override
 	public void setPlaying(boolean playing) {
 		// Tell all sprites.
 		for (GSprite sprite : sprites.values()) {
@@ -242,6 +253,17 @@ public class GButton extends GObject implements GAnimatable {
 				// Go!
 				sprite.setPlaying(playing);
 			}
+		}
+	}
+
+	@Override
+	public void setSize(double w, double h) throws IllegalArgumentException {
+		// Set the size.
+		super.setSize(w, h);
+
+		// Also set the size for all sprites.
+		for (GSprite sprite : sprites.values()) {
+			sprite.setSize(w, h);
 		}
 	}
 
@@ -286,28 +308,6 @@ public class GButton extends GObject implements GAnimatable {
 		// Also set the width for all sprites.
 		for (GSprite sprite : sprites.values()) {
 			sprite.setWidth(w);
-		}
-	}
-
-	@Override
-	public void setHeight(double h) throws IllegalArgumentException {
-		// Set the height.
-		super.setHeight(h);
-
-		// Also set the height for all sprites.
-		for (GSprite sprite : sprites.values()) {
-			sprite.setHeight(h);
-		}
-	}
-
-	@Override
-	public void setSize(double w, double h) throws IllegalArgumentException {
-		// Set the size.
-		super.setSize(w, h);
-
-		// Also set the size for all sprites.
-		for (GSprite sprite : sprites.values()) {
-			sprite.setSize(w, h);
 		}
 	}
 

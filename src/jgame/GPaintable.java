@@ -11,6 +11,15 @@ import java.awt.Graphics2D;
 public interface GPaintable {
 
 	/**
+	 * Determines whether this object is visible. Neither an invisible object
+	 * nor its children will be painted.
+	 * 
+	 * @return {@code true} if this object is visible, or {@code false} if it is
+	 *         not
+	 */
+	public boolean isVisible();
+
+	/**
 	 * Paints the object given the specified graphics context.
 	 * 
 	 * @param g
@@ -26,14 +35,5 @@ public interface GPaintable {
 	 *            the graphics context to prepare
 	 */
 	public void preparePaint(Graphics2D g);
-
-	/**
-	 * Determines whether this object is visible. Neither an invisible object
-	 * nor its children will be painted.
-	 * 
-	 * @return {@code true} if this object is visible, or {@code false} if it is
-	 *         not
-	 */
-	public boolean isVisible();
 
 }

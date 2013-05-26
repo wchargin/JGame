@@ -177,6 +177,15 @@ public class ImageCache {
 	}
 
 	/**
+	 * Gets the filename prefix for this cache.
+	 * 
+	 * @return the prefix
+	 */
+	public String getPrefix() {
+		return prefix;
+	}
+
+	/**
 	 * Gets the images in sequential order. This method does not include leading
 	 * zeroes. For example, a set of images named {@code image1.png},
 	 * {@code image2.png}, and {@code image3.png} could be retrieved with a call
@@ -219,15 +228,6 @@ public class ImageCache {
 
 		// Return.
 		return result;
-	}
-
-	/**
-	 * Gets the filename prefix for this cache.
-	 * 
-	 * @return the prefix
-	 */
-	public String getPrefix() {
-		return prefix;
 	}
 
 	/**

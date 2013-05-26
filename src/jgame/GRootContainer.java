@@ -71,6 +71,7 @@ public class GRootContainer implements GPaintable, GObjectHolder {
 	 *            the view to be added
 	 * @see jgame.GObjectHolder#add(jgame.GObject)
 	 */
+	@Override
 	public void add(GObject object) {
 		// Use the object as both name and view.
 		addView(object, object);
@@ -229,6 +230,11 @@ public class GRootContainer implements GPaintable, GObjectHolder {
 	}
 
 	@Override
+	public boolean isVisible() {
+		return true;
+	}
+
+	@Override
 	public void paint(Graphics2D g) {
 
 		// Set the background color.
@@ -302,11 +308,6 @@ public class GRootContainer implements GPaintable, GObjectHolder {
 			// ... let it know it's shown.
 			views.get(currentViewName).viewShown();
 		}
-	}
-
-	@Override
-	public boolean isVisible() {
-		return true;
 	}
 
 }

@@ -73,19 +73,19 @@ public class KeyboardLocationController extends AbstractLocRotController {
 		for (Integer i : context.getKeyCodesPressed()) {
 			// Check the code.
 
-			if (i.equals((Integer) controlScheme.up)) {
+			if (i.equals(controlScheme.up)) {
 				// We want to go up. That's -Y.
 				vertical--;
 			}
-			if (i.equals((Integer) controlScheme.dn)) {
+			if (i.equals(controlScheme.dn)) {
 				// We want to go down. That's +Y.
 				vertical++;
 			}
-			if (i.equals((Integer) controlScheme.rt)) {
+			if (i.equals(controlScheme.rt)) {
 				// We want to go right. That's +X.
 				horizontal++;
 			}
-			if (i.equals((Integer) controlScheme.lt)) {
+			if (i.equals(controlScheme.lt)) {
 				// We want to go left. That's -X.
 				horizontal--;
 			}

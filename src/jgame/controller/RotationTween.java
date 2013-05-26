@@ -14,24 +14,14 @@ import jgame.GObject;
 public class RotationTween extends TweenController {
 
 	/**
-	 * Creates the rotation tween with the given duration, interpolation type,
-	 * and start and end rotation values.
-	 * 
-	 * @param duration
-	 *            the tween duration, in frames
-	 * @param interpolationType
-	 *            the interpolation type
-	 * @param start
-	 *            the starting rotation
-	 * @param end
-	 *            the ending rotation
+	 * The starting rotation.
 	 */
-	public RotationTween(int duration, Interpolation interpolationType,
-			double start, double end) {
-		super(duration, interpolationType);
-		this.start = start;
-		this.delta = start - end;
-	}
+	private final double start;
+
+	/**
+	 * The total angular displacement over the duration over the controller.
+	 */
+	private final double delta;
 
 	/**
 	 * Creates the rotation tween with the given duration and start and end
@@ -53,14 +43,24 @@ public class RotationTween extends TweenController {
 	}
 
 	/**
-	 * The starting rotation.
+	 * Creates the rotation tween with the given duration, interpolation type,
+	 * and start and end rotation values.
+	 * 
+	 * @param duration
+	 *            the tween duration, in frames
+	 * @param interpolationType
+	 *            the interpolation type
+	 * @param start
+	 *            the starting rotation
+	 * @param end
+	 *            the ending rotation
 	 */
-	private final double start;
-
-	/**
-	 * The total angular displacement over the duration over the controller.
-	 */
-	private final double delta;
+	public RotationTween(int duration, Interpolation interpolationType,
+			double start, double end) {
+		super(duration, interpolationType);
+		this.start = start;
+		this.delta = start - end;
+	}
 
 	@Override
 	protected void interpolate(GObject target, Context context,

@@ -596,7 +596,7 @@ public abstract class BaseGame extends Thread {
 			final String SEPARATOR = " | ";
 			String text = "FPS: "
 					+ (lastFrameRenderNanos <= 0 ? "\u221e" : df
-							.format(1e9d / (double) lastFrameRenderNanos));
+							.format(1e9d / lastFrameRenderNanos));
 			text += SEPARATOR
 					+ (currentMouseLocation == null ? "Mouse offscreen"
 							: ("Mouse: (" + currentMouseLocation.x + ", "
@@ -661,7 +661,7 @@ public abstract class BaseGame extends Thread {
 			}
 
 			// If needed:
-			lastFrameRenderNanos = (long) (System.nanoTime() - renderStart);
+			lastFrameRenderNanos = System.nanoTime() - renderStart;
 		}
 
 		// When done, dispose of the frame.

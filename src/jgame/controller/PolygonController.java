@@ -76,7 +76,7 @@ public class PolygonController extends AbstractLocRotController {
 			return new Point2D.Double(0, 0);
 		}
 		// Target:
-		double factor = (double) currentStep / (double) getMaxSpeed();
+		double factor = currentStep / getMaxSpeed();
 		double targetX = p.xpoints[currentPoint] + factor
 				* (p.xpoints[currentPoint + 1] - p.xpoints[currentPoint]);
 		double targetY = p.ypoints[currentPoint] + factor
