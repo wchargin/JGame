@@ -815,7 +815,7 @@ public class GObject implements GPaintable, GObjectHolder {
 		Graphics2D sandbox = (Graphics2D) g.create();
 
 		// Clip it - stay within the lines.
-		sandbox.clipRect(0, 0, getIntWidth(), getIntHeight());
+		sandbox.clip(getBoundingShape());
 
 		// Perform preliminary transforms, modifications, etc.
 		object.preparePaint(sandbox);
