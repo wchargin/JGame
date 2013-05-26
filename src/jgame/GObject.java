@@ -1326,8 +1326,8 @@ public class GObject implements GPaintable, GObjectHolder {
 	 */
 	public void moveAtAngle(double distance, double angle) {
 		double angle_rad = Math.toRadians(angle);
-		x += Math.cos(angle_rad);
-		y += Math.sin(angle_rad);
+		x += distance * Math.cos(angle_rad);
+		y += distance * Math.sin(angle_rad);
 	}
 
 	/**
