@@ -238,27 +238,64 @@ public class GObject implements GPaintable, GObjectHolder {
 	}
 
 	/**
-	 * Determines the angle from this object's anchor point to the given
-	 * object's anchor point.
+	 * Determines the angle from this object's anchor point to the point
+	 * specified by the given coordinates.
 	 * 
-	 * @param other
-	 *            the object for which to calculate the angle
-	 * @return the angle, in degrees, clockwise, where 0&deg; means due east
+	 * @param x
+	 *            the x coordinate of the point for which to calculate the angle
+	 * @param y
+	 *            the y coordinate of the point for which to calculate the angle
+	 * @return the angle, in degrees, clockwise, where 0&deg; means due east, or
+	 *         {@code 0} if the two points are coincident
 	 */
-	public double angleTo(GObject other) {
-		// Find anchors.
-		Point2D anchor = getAnchorPoint();
-		Point2D otherAnchor = other.getAnchorPoint();
-
+	public double angleTo(double x, double y) {
 		// Same?
-		if (anchor.equals(otherAnchor)) {
+		if (x == this.x && y == this.y) {
 			// Don't want to divide by zero.
 			return 0;
 		}
 
 		// Else...
-		return Math.toDegrees(Math.atan2(otherAnchor.getY() - anchor.getY(),
-				otherAnchor.getX() - anchor.getX()));
+		return Math.toDegrees(Math.atan2(y - this.y, x - this.x));
+	}
+
+	/**
+	 * Determines the angle from this object's anchor point to the given
+	 * object's anchor point.
+	 * 
+	 * @param other
+	 *            the object for which to calculate the angle
+	 * @return the angle, in degrees, clockwise, where 0&deg; means due east, or
+	 *         {@code 0} if the objects have the same anchor point
+	 * @throws IllegalArgumentException
+	 *             if {@code other} is {@code null}
+	 */
+	public double angleTo(GObject other) throws IllegalArgumentException {
+		// Perform a null-check.
+		if (other == null) {
+			// other == null.
+			throw new IllegalArgumentException("other == null");
+		}
+		return angleTo(other.x, other.y);
+	}
+
+	/**
+	 * Determines the angle from this object's anchor point to the given point.
+	 * 
+	 * @param point
+	 *            the point for which to calculate the angle
+	 * @return the angle, in degrees, clockwise, where 0&deg; means due east, or
+	 *         {@code 0} if the two points are coincident
+	 * @throws IllegalArgumentException
+	 *             if {@code point} is {@code null}
+	 */
+	public double angleTo(Point2D point) {
+		// Perform a null-check.
+		if (point == null) {
+			// point == null.
+			throw new IllegalArgumentException("point == null");
+		}
+		return angleTo(point.getX(), point.getY());
 	}
 
 	/**
@@ -297,10 +334,24 @@ public class GObject implements GPaintable, GObjectHolder {
 
 	/**
 	 * Calculates the distance from this object's anchor point to the given
+	 * point. The points are assumed to be in the same coordinate space.
+	 * 
+	 * @param x
+	 *            the x coordinate of the point for which to calculate distance
+	 * @param y
+	 *            the y coordinate of the point for which to calculate distance
+	 * @return the distance, in pixels
+	 */
+	public double distanceTo(double x, double y) {
+		return Point2D.distance(x, y, this.x, this.y);
+	}
+
+	/**
+	 * Calculates the distance from this object's anchor point to the given
 	 * object's anchor point.
 	 * 
 	 * @param other
-	 *            the object to calculate distance for
+	 *            the object for which to calculate distance
 	 * @return the distance, in pixels
 	 * @throws IllegalArgumentException
 	 *             if {@code other} is {@code null}
@@ -327,7 +378,7 @@ public class GObject implements GPaintable, GObjectHolder {
 	 * point. The points are assumed to be in the same coordinate space.
 	 * 
 	 * @param point
-	 *            the point to calculate distance for
+	 *            the point for which to calculate distance
 	 * @return the distance, in pixels
 	 * @throws IllegalArgumentException
 	 *             if {@code point} is {@code null}
@@ -335,7 +386,7 @@ public class GObject implements GPaintable, GObjectHolder {
 	public double distanceTo(Point2D point) throws IllegalArgumentException {
 		// Perform a null-check.
 		if (point == null) {
-			// other == null.
+			// point == null.
 			throw new IllegalArgumentException("point == null");
 		}
 
@@ -344,17 +395,62 @@ public class GObject implements GPaintable, GObjectHolder {
 	}
 
 	/**
+	 * Causes this object to face the point specified by the given coordinates.
+	 * This is equivalent to
+	 * 
+	 * <pre>
+	 * <code>{@link #setRotation(double) setRotation}({@link #angleTo(double, double) angleTo}(x, y))</code>
+	 * </pre>
+	 * 
+	 * @param x
+	 *            the x coordinate of the point to face
+	 * @param y
+	 *            the y coordinate of the point to face
+	 */
+	public void face(double x, double y) {
+		setRotation(angleTo(x, y));
+	}
+
+	/**
 	 * Causes this object to face the given object. This is equivalent to
 	 * 
 	 * <pre>
-	 * <code>{@link #setRotation(double) setRotation}({@link #angleTo(GObject) getAngleTo}(other))</code>
+	 * <code>{@link #setRotation(double) setRotation}({@link #angleTo(GObject) angleTo}(other))</code>
 	 * </pre>
 	 * 
 	 * @param other
 	 *            the object to face
+	 * @throws IllegalArgumentException
+	 *             if {@code other} is {@code null}
 	 */
-	public void face(GObject other) {
+	public void face(GObject other) throws IllegalArgumentException {
+		// Perform a null-check.
+		if (other == null) {
+			// other == null.
+			throw new IllegalArgumentException("other == null");
+		}
 		setRotation(angleTo(other));
+	}
+
+	/**
+	 * Causes this object to face the given point. This is equivalent to
+	 * 
+	 * <pre>
+	 * <code>{@link #setRotation(double) setRotation}({@link #angleTo(Point2D) angleTo}(point))</code>
+	 * </pre>
+	 * 
+	 * @param point
+	 *            the point to face
+	 * @throws IllegalArgumentException
+	 *             if {@code point} is {@code null}
+	 */
+	public void face(Point2D point) throws IllegalArgumentException {
+		// Perform a null-check.
+		if (point == null) {
+			// point == null.
+			throw new IllegalArgumentException("point == null");
+		}
+		setRotation(angleTo(point));
 	}
 
 	/**
