@@ -33,6 +33,21 @@ public class PolygonController extends AbstractLocRotController {
 	private int currentStep = 0;
 
 	/**
+	 * Positions and rotates the target object at the start of the path. It is
+	 * recommended that you invoke this method after creating the controller,
+	 * because otherwise there may be a frame in which the object is still at
+	 * its default location and rotation, before jumping to the start of the
+	 * path.
+	 * 
+	 * @param target
+	 *            the object to modify
+	 */
+	public void goToStart(GObject target) {
+		target.setLocation(p.xpoints[0], p.ypoints[0]);
+		target.face(p.xpoints[1], p.ypoints[1]);
+	}
+
+	/**
 	 * Creates the polygon controller.
 	 * 
 	 * @param p
@@ -60,6 +75,23 @@ public class PolygonController extends AbstractLocRotController {
 		super(rotateToFollow, rotationOffset);
 		setPolygon(p);
 		setMaxSpeed(12);
+	}
+
+	/**
+	 * Asserts that the given polygon has at least two points, and throws an
+	 * exception if this is not the case.
+	 * 
+	 * @param p
+	 *            the polygon to check
+	 * @throws IllegalArgumentException
+	 *             if {@code p.npoints < 2}
+	 */
+	private void assertPolygonHasAtLeastTwoPoints(Polygon p)
+			throws IllegalArgumentException {
+		if (p.npoints < 2) {
+			throw new IllegalArgumentException(
+					"Polygon must have at least 2 points, but has " + p.npoints);
+		}
 	}
 
 	@Override
@@ -125,6 +157,7 @@ public class PolygonController extends AbstractLocRotController {
 	 *            the new polygon
 	 */
 	public void setPolygon(Polygon p) {
+		assertPolygonHasAtLeastTwoPoints(p);
 		this.p = p;
 		reset();
 	}
