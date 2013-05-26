@@ -23,7 +23,7 @@ public abstract class AbstractIntensityController implements Controller {
 	public static final int SCALE = 2;
 
 	/**
-	 * The property mask. Default is {@link #ALPHA}.
+	 * The property mask. Default is {@link #ALPHA} and {@link #SCALE}.
 	 */
 	private int properties = ALPHA | SCALE;
 
