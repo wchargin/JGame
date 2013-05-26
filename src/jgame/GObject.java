@@ -261,6 +261,34 @@ public class GObject implements GPaintable, GObjectHolder {
 				otherAnchor.getX() - anchor.getX()));
 	}
 
+	/**
+	 * Moves this object a given percentage of the distance between itself and
+	 * another object. This differs from {@link #moveToward(double, GObject)} in
+	 * that it accepts not a fixed distance in pixels but rather a percentage of
+	 * the distance between the two objects. For example, passing {@code 0.5} as
+	 * {@code percentage} would cause this object to move to the midpoint of the
+	 * line segment formed by the original anchor point of this object and that
+	 * of the target object, while a percentage of {@code 1.0} would perform the
+	 * same function as {@link #moveTo(GObject)}. If the distance to the other
+	 * object is zero, no action will be performed and no error will be thrown.
+	 * 
+	 * @param percentage
+	 *            the percentage of the distance to move
+	 * @param other
+	 *            the object to move toward.
+	 */
+	public void approach(double percentage, GObject other) {
+		if (percentage == 1) {
+			moveTo(other);
+			return;
+		}
+		double distance = percentage * distanceTo(other);
+		if (distance == 0) {
+			return;
+		}
+		moveToward(distance, other);
+	}
+
 	@Override
 	public void componentRemoved(GPaintable object) {
 		// If we had this object, remove it from the set.
@@ -809,6 +837,52 @@ public class GObject implements GPaintable, GObjectHolder {
 	}
 
 	/**
+	 * Moves this object a given distance at the given angle.
+	 * 
+	 * @param distance
+	 *            the distance to move
+	 * @param angle
+	 *            the angle at which to move, in degrees, in parent coordinate
+	 *            space
+	 * @since 1.2
+	 */
+	public void moveAtAngle(double distance, double angle) {
+		double angle_rad = Math.toRadians(angle);
+		x += distance * Math.cos(angle_rad);
+		y += distance * Math.sin(angle_rad);
+	}
+
+	/**
+	 * Moves this object to the given object. This is equivalent to calling
+	 * {@link #snapAnchor(GObject) other.snapAnchor(this)}.
+	 * 
+	 * @param other
+	 *            the object to move to
+	 */
+	public void moveTo(GObject other) {
+		other.snapAnchor(this);
+	}
+
+	/**
+	 * Moves this object a given distance in the direction of the given object.
+	 * This may cause the object to pass the target object.
+	 * <p>
+	 * This is equivalent to:
+	 * 
+	 * <pre>
+	 * moveAtAngle(distance, angleTo(other));
+	 * </pre>
+	 * 
+	 * @param distance
+	 *            the distance to move
+	 * @param other
+	 *            the object to move toward
+	 */
+	public void moveToward(double distance, GObject other) {
+		moveAtAngle(distance, angleTo(other));
+	}
+
+	/**
 	 * Paints this object. The default {@link GObject} implementation does
 	 * nothing but paint subcomponents.
 	 */
@@ -1312,22 +1386,6 @@ public class GObject implements GPaintable, GObjectHolder {
 	 */
 	public void snapAnchor(GObject snap) {
 		snap.setLocation(x, y);
-	}
-
-	/**
-	 * Moves this object a given distance at the given angle.
-	 * 
-	 * @param distance
-	 *            the distance to move
-	 * @param angle
-	 *            the angle at which to move, in degrees, in parent coordinate
-	 *            space
-	 * @since 1.2
-	 */
-	public void moveAtAngle(double distance, double angle) {
-		double angle_rad = Math.toRadians(angle);
-		x += distance * Math.cos(angle_rad);
-		y += distance * Math.sin(angle_rad);
 	}
 
 	/**
