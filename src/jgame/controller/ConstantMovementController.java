@@ -13,6 +13,49 @@ import jgame.GObject;
 public class ConstantMovementController implements Controller {
 
 	/**
+	 * Creates a {@code ConstantMotionController} according to the given polar
+	 * vector <span style="font-family: serif">(<em>r</em>, <em>&theta;</em>
+	 * )</span> (or, equivalently, <span style="font-family: serif">(<em>v</em>,
+	 * <em>&theta;</em>)</span>). The generated controller will cause the target
+	 * to move at the given speed in the given direction.
+	 * 
+	 * @param speed
+	 *            the speed at which to move
+	 * @param angle
+	 *            the angle at which to move
+	 * @return a new {@code ConstantMovementController}
+	 */
+	public static ConstantMovementController createPolar(double speed,
+			double angle) {
+		double angle_rad = Math.toRadians(angle);
+		return new ConstantMovementController(speed * Math.cos(angle_rad),
+				speed * Math.sin(angle_rad));
+	}
+
+	/**
+	 * Creates a {@code ConstantMotionController} according to the given polar
+	 * vector <span style="font-family: serif">(<em>r</em>, <em>&theta;</em>
+	 * )</span> (or, equivalently, <span style="font-family: serif">(<em>v</em>,
+	 * <em>&theta;</em>)</span>). The generated controller will cause the target
+	 * to move at the given speed in the given direction, with the given
+	 * damping.
+	 * 
+	 * @param speed
+	 *            the speed at which to move
+	 * @param angle
+	 *            the angle at which to move
+	 * @param damping
+	 *            the damping factor
+	 * @return a new {@code ConstantMovementController}
+	 */
+	public static ConstantMovementController createPolar(double speed,
+			double angle, double damping) {
+		double angle_rad = Math.toRadians(angle);
+		return new ConstantMovementController(speed * Math.cos(angle_rad),
+				speed * Math.sin(angle_rad), damping);
+	}
+
+	/**
 	 * The velocity at which the controller will move the object along the
 	 * x-axis (in px/frame).
 	 */
