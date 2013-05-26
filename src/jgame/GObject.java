@@ -813,7 +813,7 @@ public class GObject implements GPaintable, GObjectHolder {
 	private void paintSandboxed(GPaintable object, Graphics2D g) {
 		// Sandbox the graphics.
 		Graphics2D sandbox = (Graphics2D) g.create();
-		
+
 		// Clip it - stay within the lines.
 		sandbox.clipRect(0, 0, getIntWidth(), getIntHeight());
 

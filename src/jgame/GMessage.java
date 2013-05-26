@@ -7,9 +7,6 @@ import java.awt.Graphics2D;
 
 /**
  * A simple text message in a game.
- * <p>
- * The default {@linkplain #setAnchorWeight(double, double) anchor weight} for
- * this class is {@linkplain #setAnchorTopLeft() top left} ({@code 0.0, 0.0}).
  * 
  * @author William Chargin
  * 
@@ -49,7 +46,6 @@ public class GMessage extends GObject {
 		font = new Font(Font.SANS_SERIF, Font.PLAIN, 12);
 		color = Color.BLACK;
 		text = new String();
-		setAnchorTopLeft();
 	}
 
 	/**
@@ -139,7 +135,7 @@ public class GMessage extends GObject {
 
 		// Calculate dimensions.
 		int w = fm.stringWidth(text);
-		int h = fm.getAscent();
+		int h = fm.getAscent() * 2 / 3;
 
 		// How much extra space is there?
 		double extraX = getWidth() - w;
