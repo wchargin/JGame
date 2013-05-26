@@ -5,8 +5,10 @@ import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.lang.ref.WeakReference;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Set;
 import java.util.Vector;
 
 import javax.sound.sampled.AudioInputStream;
@@ -226,6 +228,11 @@ public class SoundManager {
 	}
 
 	/**
+	 * The list of sound names currently being loaded.
+	 */
+	private final Set<String> currentlyPreloading = new HashSet<String>();
+
+	/**
 	 * Creates the sound cache with no prefix.
 	 * 
 	 * @param clazz
@@ -252,6 +259,44 @@ public class SoundManager {
 		this.clazz = clazz;
 		setPrefix(prefix);
 		byteCache = new HashMap<String, ByteArrayInputStream>();
+	}
+
+	/**
+	 * Gets a clip from the given file name.
+	 * 
+	 * @param name
+	 *            the filename
+	 * @return a clip reference
+	 */
+	private Clip createClip(String name) {
+		// Make sure it's loaded first.
+		preload(name);
+
+		// Get a BAIS.
+		ByteArrayInputStream bais = byteCache.get(prefix + name);
+		bais.reset();
+
+		try {
+			// Get us a clip.
+			Clip clip = AudioSystem.getClip();
+
+			// Convert to an audio stream.
+			AudioInputStream ais = AudioSystem.getAudioInputStream(bais);
+
+			// Open the clip.
+			clip.open(ais);
+
+			// Close the stream to prevent a memory leak.
+			ais.close();
+
+			// Create a new Sound and return it.
+			return clip;
+		} catch (Exception e) {
+			// Nothing really to do.
+			e.printStackTrace();
+			return null;
+		}
+
 	}
 
 	/**
@@ -290,63 +335,81 @@ public class SoundManager {
 	 *         has finished
 	 */
 	public Sound play(String name) {
-		try {
-			// Create a clip.
-			Clip clip = AudioSystem.getClip();
+		Clip clip = createClip(name);
+		clip.start();
+		return new Sound(clip);
+	}
 
+	/**
+	 * Preloads the given sound, but does not play it. The sound can be played
+	 * later with the {@link #play(String)} method.
+	 * 
+	 * @param name
+	 *            the filename of the clip to play
+	 * @return {@code true} if the preloading succeeded or has already been
+	 *         performed successfully, or {@code false} if it failed
+	 */
+	public boolean preload(String name) {
+		try {
 			// Find the full name.
 			final String fullPath = prefix + name;
 
-			// See what we have already.
-			ByteArrayInputStream theseBytes = byteCache.get(fullPath);
+			// Do we have this already?
+			if (byteCache.containsKey(fullPath)) {
+				// Already preloaded.
+				return true;
+			}
+			// Not cached yet. Read it in.
+			InputStream is = clazz.getResourceAsStream(fullPath);
 
-			// Have we found the bytes yet?
-			if (theseBytes == null) {
-				// Nope. Read it in.
-				InputStream is = clazz.getResourceAsStream(fullPath);
+			// Output to a temporary stream.
+			ByteArrayOutputStream baos = new ByteArrayOutputStream();
 
-				// Output to a temporary stream.
-				ByteArrayOutputStream baos = new ByteArrayOutputStream();
-
-				// Loop.
-				for (int b; (b = is.read()) != -1;) {
-					// Write it.
-					baos.write(b);
-				}
-
-				// Close the input stream now.
-				is.close();
-
-				// Create a byte array.
-				theseBytes = new ByteArrayInputStream(baos.toByteArray());
-
-				// Put in map for later reference.
-				byteCache.put(fullPath, theseBytes);
+			// Loop.
+			for (int b; (b = is.read()) != -1;) {
+				// Write it.
+				baos.write(b);
 			}
 
-			// Get a BAIS.
-			ByteArrayInputStream bais = theseBytes;
-			bais.reset();
-			// Convert to an audio stream.
-			AudioInputStream ais = AudioSystem.getAudioInputStream(bais);
+			// Close the input stream now.
+			is.close();
 
-			// Open the clip.
-			clip.open(ais);
+			// Create a byte array.
+			ByteArrayInputStream theseBytes = new ByteArrayInputStream(
+					baos.toByteArray());
 
-			// Close the stream to prevent a memory leak.
-			ais.close();
+			// Put in map for later reference.
+			byteCache.put(fullPath, theseBytes);
 
-			// Start the clip.
-			clip.start();
+			// Success!
+			return true;
 
-			// Create a new Sound and return it.
-			return new Sound(clip);
 		} catch (Exception e) {
 			// If they're watching, let them know.
 			e.printStackTrace();
 
 			// Nothing to do here.
-			return null;
+			return false;
+		}
+	}
+
+	/**
+	 * Preloads the given sound asynchronously. This method will not block; that
+	 * is, it will not wait for the sound to load before returning.
+	 * 
+	 * @param name
+	 *            the filename of the sound to preload
+	 */
+	public synchronized void preloadAsync(final String name) {
+		if (!currentlyPreloading.contains(prefix + name)) {
+			currentlyPreloading.add(prefix + name);
+			new Thread(new Runnable() {
+				@Override
+				public void run() {
+					preload(name);
+					currentlyPreloading.remove(prefix + name);
+				}
+			}).start();
 		}
 	}
 
