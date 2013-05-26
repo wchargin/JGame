@@ -1315,6 +1315,22 @@ public class GObject implements GPaintable, GObjectHolder {
 	}
 
 	/**
+	 * Moves this object a given distance at the given angle.
+	 * 
+	 * @param distance
+	 *            the distance to move
+	 * @param angle
+	 *            the angle at which to move, in degrees, in parent coordinate
+	 *            space
+	 * @since 1.2
+	 */
+	public void moveAtAngle(double distance, double angle) {
+		double angle_rad = Math.toRadians(angle);
+		x += Math.cos(angle_rad);
+		y += Math.sin(angle_rad);
+	}
+
+	/**
 	 * Snaps the given child's anchor point to this object's anchor point in
 	 * parent-child coordinate space. This object will not be affected.
 	 * 
