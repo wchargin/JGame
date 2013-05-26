@@ -179,7 +179,8 @@ public class GObject implements GPaintable, GObjectHolder {
 
 	/**
 	 * Adds the object at the center of this component. This is equivalent to
-	 * calling {@link #add(GObject)} and then {@link #snapChild(GObject)}.
+	 * calling {@link #add(GObject)} and then
+	 * {@link #snapChildToCenter(GObject)}.
 	 * 
 	 * @param object
 	 *            the object to add
@@ -189,7 +190,7 @@ public class GObject implements GPaintable, GObjectHolder {
 		add(object);
 
 		// Center.
-		snapChild(object);
+		snapChildToCenter(object);
 	}
 
 	/**
@@ -1308,6 +1309,18 @@ public class GObject implements GPaintable, GObjectHolder {
 	public void snapChild(GObject snap) {
 		// Set both coordinates.
 		snap.setLocation(width * anchorWeightX, height * anchorWeightY);
+	}
+
+	/**
+	 * Snaps the given child's anchor point to this object's center in
+	 * parent-child coordinate space. This object will not be affected.
+	 * 
+	 * @param snap
+	 *            the child to move
+	 */
+	public void snapChildToCenter(GObject snap) {
+		// Set both coordinates.
+		snap.setLocation(width / 2, height / 2);
 	}
 
 	/**
