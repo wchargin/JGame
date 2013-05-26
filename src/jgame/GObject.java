@@ -295,6 +295,27 @@ public class GObject implements GPaintable, GObjectHolder {
 	}
 
 	/**
+	 * Calculates the distance from this object's anchor point to the given
+	 * point. The points are assumed to be in the same coordinate space.
+	 * 
+	 * @param point
+	 *            the point to calculate distance for
+	 * @return the distance, in pixels
+	 * @throws IllegalArgumentException
+	 *             if {@code point} is {@code null}
+	 */
+	public double distanceTo(Point2D point) throws IllegalArgumentException {
+		// Perform a null-check.
+		if (point == null) {
+			// other == null.
+			throw new IllegalArgumentException("point == null");
+		}
+
+		// Calculate and return the distance.
+		return getAnchorPoint().distance(point);
+	}
+
+	/**
 	 * Causes this object to face the given object. This is equivalent to
 	 * 
 	 * <pre>
