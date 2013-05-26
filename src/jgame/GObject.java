@@ -1311,13 +1311,7 @@ public class GObject implements GPaintable, GObjectHolder {
 	 *            the object to move
 	 */
 	public void snapAnchor(GObject snap) {
-		// Find our anchor point.
-		Point2D thisAnchor = this.getAnchorPoint();
-
-		// Set both coordinates.
-		snap.setX(thisAnchor.getX() - snap.getWidth() * snap.getAnchorWeightX());
-		snap.setY(thisAnchor.getY() - snap.getHeight()
-				* snap.getAnchorWeightY());
+		snap.setLocation(x, y);
 	}
 
 	/**
