@@ -2,6 +2,7 @@ package jgame;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.lang.ref.WeakReference;
 import java.util.HashMap;
@@ -17,6 +18,8 @@ import javax.sound.sampled.BooleanControl;
 import javax.sound.sampled.Clip;
 import javax.sound.sampled.LineEvent;
 import javax.sound.sampled.LineListener;
+
+import org.newdawn.easyogg.OggClip;
 
 /**
  * A cache for sounds.
@@ -43,6 +46,11 @@ public class SoundManager {
 		 * The clip for this sound.
 		 */
 		private Clip clip;
+
+		/**
+		 * The clip for this sound, if it's an OGG file.
+		 */
+		private OggClip ogg;
 
 		/**
 		 * Creates the sound with the given clip.
@@ -83,45 +91,68 @@ public class SoundManager {
 		}
 
 		/**
-		 * Mutes or unmutes this sound.
+		 * Creates the sound with the given OGG input stream.
 		 * 
-		 * @param mute
-		 *            {@code true} to mute or {@code false} to unmute
+		 * @param in
+		 *            the input stream
 		 */
-		public void setMute(boolean mute) {
-			// Catch any errors.
+		private Sound(InputStream in) {
 			try {
-				// Can we mute?
-				if (clip.isControlSupported(BooleanControl.Type.MUTE)) {
-					// Get the control.
-					BooleanControl muteControl = (BooleanControl) clip
-							.getControl(BooleanControl.Type.MUTE);
-
-					// Mute or unmute.
-					muteControl.setValue(mute);
-				}
-			} catch (Exception e) {
-				// The get control or cast operation failed.
-				// That's okay, but let them know.
+				ogg = new OggClip(in);
+				allSounds.add(new WeakReference<Sound>(this));
+			} catch (IOException e) {
 				e.printStackTrace();
 			}
 		}
 
 		/**
-		 * Stops this sound if it is playing.
+		 * Pauses or resumes this sound.
 		 * 
-		 * @throws IllegalStateException
-		 *             if the clip has already stopped
+		 * @param pause
+		 *            {@code true} to pause or {@code false} to resume
 		 */
-		public void stop() throws IllegalStateException {
-			// Make sure we can stop.
-			if (clip == null) {
-				// Already stopped.
-				throw new IllegalStateException(
-						"The sound has already stopped.");
+		public void setPause(boolean pause) {
+			if (ogg != null) {
+				if (pause) {
+					ogg.pause();
+				} else {
+					ogg.resume();
+				}
 			}
-			clip.stop();
-			clip.drain();
+
+			if (clip != null) {
+				// Catch any errors.
+				try {
+					// Can we mute?
+					if (clip.isControlSupported(BooleanControl.Type.MUTE)) {
+						// Get the control.
+						BooleanControl muteControl = (BooleanControl) clip
+								.getControl(BooleanControl.Type.MUTE);
+
+						// Mute or unmute.
+						muteControl.setValue(pause);
+					}
+				} catch (Exception e) {
+					// The get control or cast operation failed.
+					// That's okay, but let them know.
+					e.printStackTrace();
+				}
+			}
+		}
+
+		/**
+		 * Stops this sound if it is playing.
+		 */
+		public void stop() {
+			if (ogg != null) {
+				ogg.stop();
+			}
+
+			// Make sure we can stop.
+			if (clip != null) {
+				clip.stop();
+				clip.drain();
+			}
 		}
 	}
 
@@ -320,7 +351,12 @@ public class SoundManager {
 		Sound sound = play(name);
 
 		// Loop.
-		sound.clip.loop(Clip.LOOP_CONTINUOUSLY);
+		if (sound.clip != null) {
+			sound.clip.loop(Clip.LOOP_CONTINUOUSLY);
+		}
+		if (sound.ogg != null) {
+			sound.ogg.loop();
+		}
 
 		// Return.
 		return sound;
@@ -335,9 +371,14 @@ public class SoundManager {
 	 *         has finished
 	 */
 	public Sound play(String name) {
-		Clip clip = createClip(name);
-		clip.start();
-		return new Sound(clip);
+		if (name.toLowerCase().endsWith(".ogg")) {
+			preload(name);
+			return new Sound(byteCache.get(prefix + name));
+		} else {
+			Clip clip = createClip(name);
+			clip.start();
+			return new Sound(clip);
+		}
 	}
 
 	/**
