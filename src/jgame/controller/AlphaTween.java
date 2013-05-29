@@ -12,12 +12,12 @@ import jgame.GObject;
 public class AlphaTween extends TweenController {
 
 	/**
-	 * The starting rotation.
+	 * The starting alpha.
 	 */
 	private final double start;
 
 	/**
-	 * The total angular displacement over the duration over the controller.
+	 * The total alpha displacement over the duration over the controller.
 	 */
 	private final double delta;
 
@@ -41,8 +41,8 @@ public class AlphaTween extends TweenController {
 	}
 
 	/**
-	 * Creates the rotation tween with the given duration, interpolation type,
-	 * and start and end rotation values.
+	 * Creates the alpha tween with the given duration, interpolation type, and
+	 * start and end alpha values.
 	 * 
 	 * @param duration
 	 *            the tween duration, in frames
