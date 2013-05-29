@@ -39,7 +39,7 @@ public class RotationTween extends TweenController {
 	public RotationTween(int duration, double start, double end) {
 		super(duration);
 		this.start = start;
-		this.delta = start - end;
+		this.delta = end - start;
 	}
 
 	/**
@@ -59,7 +59,7 @@ public class RotationTween extends TweenController {
 			double start, double end) {
 		super(duration, interpolationType);
 		this.start = start;
-		this.delta = start - end;
+		this.delta = end - start;
 	}
 
 	@Override
