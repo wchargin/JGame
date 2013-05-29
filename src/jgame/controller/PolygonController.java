@@ -44,7 +44,10 @@ public class PolygonController extends AbstractLocRotController {
 	 */
 	public void goToStart(GObject target) {
 		target.setLocation(p.xpoints[0], p.ypoints[0]);
-		target.face(p.xpoints[1], p.ypoints[1]);
+		if (isRotateToFollow()) {
+			target.face(p.xpoints[1], p.ypoints[1]);
+			target.setRotation(target.getRotation() + getRotationOffset());
+		}
 	}
 
 	/**
