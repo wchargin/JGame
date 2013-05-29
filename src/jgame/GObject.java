@@ -1090,6 +1090,13 @@ public class GObject implements GPaintable, GObjectHolder {
 	}
 
 	/**
+	 * Removes all children from this container.
+	 */
+	public void removeAllChildren() {
+		subcomponents.clear();
+	}
+
+	/**
 	 * Removes the given controller from the controller list.
 	 * 
 	 * @param c
