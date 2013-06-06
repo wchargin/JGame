@@ -490,8 +490,11 @@ public class GObject implements GPaintable, GObjectHolder {
 		// Account for our transform.
 		at.concatenate(getTransform(false));
 
-		// Account for our translation.
-		at.translate(x - width * anchorWeightX, y - height * anchorWeightY);
+		// If we're not top-level...
+		if (hasParent()) {
+			// Account for our translation.
+			at.translate(x - width * anchorWeightX, y - height * anchorWeightY);
+		}
 
 		// Get and return the shape.
 		return at.createTransformedShape(getBoundingShape());
