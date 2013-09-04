@@ -3,17 +3,17 @@
 	<!--this file was adapted from the Eclipse Runnable JAR Export Wizard-->
 	<!--ANT 1.7 is required                                              -->
 	<target name="create_jar">
-		<jar destfile="C:/Users/William/Dropbox/EclipseJava/JGame/jgame-1.2.jar" filesetmanifest="mergewithoutmain">
+		<jar destfile="${basedir}/jgame-1.2.jar" filesetmanifest="mergewithoutmain">
 			<manifest>
 				<attribute name="Manifest-Version" value="1.0" />
 			</manifest>
-			<fileset dir="C:/Users/William/Dropbox/EclipseJava/JGame/src" />
-			<fileset dir="C:/Users/William/Dropbox/EclipseJava/JGame/bin" />
-			<zipfileset dir="C:/Users/William/Dropbox/EclipseJava/JGame/doc" prefix="doc" />
+			<fileset dir="${basedir}/src" />
+			<fileset dir="${basedir}/bin" />
+			<zipfileset dir="${basedir}/doc" prefix="doc" />
 
-			<zipfileset excludes="META-INF/*.SF" src="C:/Users/William/Dropbox/EclipseJava/JGame/easyogg.jar" />
-			<zipfileset excludes="META-INF/*.SF" src="C:/Users/William/Dropbox/EclipseJava/JGame/jogg-0.0.7.jar" />
-			<zipfileset excludes="META-INF/*.SF" src="C:/Users/William/Dropbox/EclipseJava/JGame/jorbis-0.0.15.jar" />
+			<zipfileset excludes="META-INF/*.SF" src="${basedir}/easyogg.jar" />
+			<zipfileset excludes="META-INF/*.SF" src="${basedir}/jogg-0.0.7.jar" />
+			<zipfileset excludes="META-INF/*.SF" src="${basedir}/jorbis-0.0.15.jar" />
 		</jar>
 	</target>
 </project>
