@@ -1524,15 +1524,21 @@ public class GObject implements GPaintable, GObjectHolder {
 	}
 
 	/**
-	 * Snaps the given child's anchor point to this object's center in
+	 * Snaps the given child's center point to this object's center in
 	 * parent-child coordinate space. This object will not be affected.
 	 * 
 	 * @param snap
 	 *            the child to move
 	 */
 	public void snapChildToCenter(GObject snap) {
+		// We want the center of the object to be at (width / 2, height / 2).
+		// The center of the object is s.(x - w * ax, y - h * ay).
+		// Thus s.(x - w * ax) = w / 2; s.(y - h * ay) = h / 2.
+		// s.x = w/2 + s.x * s.ax; s.y = h / 2 + s.h * s.ay
+
 		// Set both coordinates.
-		snap.setLocation(width / 2, height / 2);
+		snap.setLocation(width / 2 + snap.x * snap.anchorWeightX, height / 2
+				+ snap.height + snap.anchorWeightY);
 	}
 
 	/**
