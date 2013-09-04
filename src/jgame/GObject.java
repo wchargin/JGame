@@ -178,6 +178,23 @@ public class GObject implements GPaintable, GObjectHolder {
 	}
 
 	/**
+	 * Adds the specified object at the given location. This is the same as
+	 * calling {@link #add(GObject)} followed by
+	 * {@link #setLocation(double, double)} on the object.
+	 * 
+	 * @param object
+	 *            the object to add
+	 * @param x
+	 *            the new x-position of the object
+	 * @param y
+	 *            the new y-position of the object
+	 */
+	public void addAt(GObject object, int x, int y) {
+		add(object);
+		object.setLocation(x, y);
+	}
+
+	/**
 	 * Adds the object at the center of this component. This is equivalent to
 	 * calling {@link #add(GObject)} and then
 	 * {@link #snapChildToCenter(GObject)}.
