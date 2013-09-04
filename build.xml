@@ -2,7 +2,7 @@
 <project default="create_jar" name="Create Jar for Project JGame">
 	<!--this file was adapted from the Eclipse Runnable JAR Export Wizard-->
 	<!--ANT 1.7 is required                                              -->
-	<target name="create_jar">
+	<target name="create_jar" depends="javadoc">
 		<jar destfile="${basedir}/jgame-1.2.jar" filesetmanifest="mergewithoutmain">
 			<manifest>
 				<attribute name="Manifest-Version" value="1.0" />
@@ -15,5 +15,9 @@
 			<zipfileset excludes="META-INF/*.SF" src="${basedir}/jogg-0.0.7.jar" />
 			<zipfileset excludes="META-INF/*.SF" src="${basedir}/jorbis-0.0.15.jar" />
 		</jar>
+	</target>
+
+	<target name="javadoc">
+		<javadoc access="private" author="true" classpath="jogg-0.0.7.jar;easyogg.jar;jorbis-0.0.15.jar" destdir="doc" nodeprecated="false" nodeprecatedlist="false" noindex="false" nonavbar="false" notree="false" packagenames="jgame.listener,jgame,jgame.controller" source="1.7" sourcepath="src" splitindex="true" stylesheetfile="C:\Program Files\Java\jdk1.7.0\javadoc-stylesheet.css" use="true" version="true" />
 	</target>
 </project>
