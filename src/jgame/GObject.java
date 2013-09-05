@@ -1537,8 +1537,8 @@ public class GObject implements GPaintable, GObjectHolder {
 		// s.x = w/2 + s.x * s.ax; s.y = h / 2 + s.h * s.ay
 
 		// Set both coordinates.
-		snap.setLocation(width / 2 + snap.x * snap.anchorWeightX, height / 2
-				+ snap.height + snap.anchorWeightY);
+		snap.setLocation(width / 2 + snap.width * (snap.anchorWeightX - 0.5),
+				height / 2 + snap.height + (snap.anchorWeightY - 0.5));
 	}
 
 	/**
