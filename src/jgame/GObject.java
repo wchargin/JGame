@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.Set;
 
 import jgame.controller.Controller;
+import jgame.controller.MouseLocationController;
 import jgame.listener.Listener;
 
 /**
@@ -160,6 +161,11 @@ public class GObject implements GPaintable, GObjectHolder {
 	 * The set of subcomponents.
 	 */
 	private final Set<GObject> subcomponents = new LinkedHashSet<GObject>();
+
+	/**
+	 * The drag controller.
+	 */
+	private MouseLocationController dragger;
 
 	/**
 	 * Creates the object.
@@ -1538,7 +1544,26 @@ public class GObject implements GPaintable, GObjectHolder {
 
 		// Set both coordinates.
 		snap.setLocation(width / 2 + snap.width * (snap.anchorWeightX - 0.5),
-				height / 2 + snap.height *  (snap.anchorWeightY - 0.5));
+				height / 2 + snap.height * (snap.anchorWeightY - 0.5));
+	}
+
+	/**
+	 * This method adds a {@code MouseLocationController} to the object; the
+	 * object will be dragged by the mouse until {@link #stopDrag()} is called.
+	 */
+	public void startDrag() {
+		if (controllersToBeAdded.contains(dragger)
+				|| controllers.contains(dragger)
+				&& !controllersToBeRemoved.contains(dragger)) {
+			addController(dragger);
+		}
+	}
+
+	/**
+	 * This method undoes a previous call to {@link #startDrag()}.
+	 */
+	public void stopDrag() {
+		removeController(dragger);
 	}
 
 	/**
