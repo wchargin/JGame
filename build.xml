@@ -18,6 +18,6 @@
 	</target>
 
 	<target name="javadoc">
-		<javadoc access="private" author="true" classpath="jogg-0.0.7.jar;easyogg.jar;jorbis-0.0.15.jar" destdir="doc" nodeprecated="false" nodeprecatedlist="false" noindex="false" nonavbar="false" notree="false" packagenames="jgame.listener,jgame,jgame.controller" source="1.7" sourcepath="src" splitindex="true" stylesheetfile="C:\Program Files\Java\jdk1.7.0\javadoc-stylesheet.css" use="true" version="true" />
+		<javadoc access="private" author="true" classpath="jogg-0.0.7.jar;easyogg.jar;jorbis-0.0.15.jar" destdir="doc" nodeprecated="false" nodeprecatedlist="false" noindex="false" nonavbar="false" notree="false" packagenames="jgame.listener,jgame,jgame.controller" source="1.7" sourcepath="src" splitindex="true" stylesheetfile="${basedir}/javadoc-stylesheet.css" use="true" version="true" />
 	</target>
 </project>
