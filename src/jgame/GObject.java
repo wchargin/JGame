@@ -195,7 +195,7 @@ public class GObject implements GPaintable, GObjectHolder {
 	 * @param y
 	 *            the new y-position of the object
 	 */
-	public void addAt(GObject object, int x, int y) {
+    public void addAt(GObject object, double x, double y) {
 		add(object);
 		object.setLocation(x, y);
 	}
