@@ -90,8 +90,7 @@ public class GButton extends GObject implements GAnimatable {
 		// If it's non-null, ask it.
 		if (sprite != null) {
 			// Return the answer.
-			return new Rectangle2D.Double(0, 0, sprite.getWidth(),
-					sprite.getHeight());
+			return sprite.getBoundingShape();
 		}
 
 		// Otherwise we'll take super.
