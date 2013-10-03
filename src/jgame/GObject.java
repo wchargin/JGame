@@ -165,7 +165,7 @@ public class GObject implements GPaintable, GObjectHolder {
 	/**
 	 * The drag controller.
 	 */
-	private MouseLocationController dragger;
+	private MouseLocationController dragger = new MouseLocationController();
 
 	/**
 	 * Creates the object.
