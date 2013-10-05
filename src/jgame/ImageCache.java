@@ -26,7 +26,13 @@ public class ImageCache {
 	private static final Map<Class<?>, ImageCache> caches = new HashMap<Class<?>, ImageCache>();
 
 	/**
-	 * Creates and returns an image cache.
+	 * The default image cache, used for static convenience methods.
+	 */
+	private static ImageCache defaultCache;
+
+	/**
+	 * Creates and returns an image cache, and sets the cache as the default
+	 * cache.
 	 * 
 	 * @param clazz
 	 *            the main game class to which this cache applies
@@ -40,7 +46,8 @@ public class ImageCache {
 	}
 
 	/**
-	 * Creates and returns an image cache with the given filename prefix.
+	 * Creates and returns an image cache with the given filename prefix, and
+	 * sets the cache as the default cache.
 	 * 
 	 * @param clazz
 	 *            the main game class to which this cache applies
@@ -74,6 +81,105 @@ public class ImageCache {
 	}
 
 	/**
+	 * Gets the default image cache.
+	 * 
+	 * @return the default cache
+	 */
+	public static ImageCache getDefaultCache() {
+		return defaultCache;
+	}
+
+	/**
+	 * Gets the cached object with the given filename from the default cache. If
+	 * the object does not yet exist, it will be cached and returned.
+	 * 
+	 * @param fileName
+	 *            the relevant file name
+	 * @return the generated object
+	 */
+	public static BufferedImage getImage(String fileName) {
+		return defaultCache.get(fileName);
+	}
+
+	/**
+	 * Gets images in sequential order from the default cache. This method does
+	 * not include leading zeroes. For example, a set of images named
+	 * {@code image1.png}, {@code image2.png}, and {@code image3.png} could be
+	 * retrieved with a call to:
+	 * 
+	 * <pre>
+	 * getSequentialImages(&quot;image&quot;, 1, 3, &quot;.png&quot;);
+	 * </pre>
+	 * 
+	 * @param prefix
+	 *            the prefix before the numbers
+	 * @param start
+	 *            the number to start at (inclusive)
+	 * @param end
+	 *            the number to end at (inclusive)
+	 * @param suffix
+	 *            the suffix after the numbers (should include file extension)
+	 * @return a list of the images matching the criteria
+	 * @throws IllegalArgumentException
+	 *             if any of the images could not be found
+	 * @since 1.2
+	 */
+	public static List<Image> getSequentialImages(String prefix, int start,
+			int end, String suffix) {
+		return defaultCache.getSequential(prefix, start, end, suffix);
+	}
+
+	/**
+	 * Creates a sprite with the images in sequential order. This method does
+	 * not include leading zeroes. For example, a sprite with the set of images
+	 * named {@code image1.png}, {@code image2.png}, and {@code image3.png}
+	 * could be retrieved with a call to:
+	 * 
+	 * <pre>
+	 * getSequentialSprite(&quot;image&quot;, 1, 3, &quot;.png&quot;);
+	 * </pre>
+	 * 
+	 * @param prefix
+	 *            the prefix before the numbers
+	 * @param start
+	 *            the number to start at (inclusive)
+	 * @param end
+	 *            the number to end at (inclusive)
+	 * @param suffix
+	 *            the suffix after the numbers (should include file extension)
+	 * @return a list of the images matching the criteria
+	 * @throws IllegalArgumentException
+	 *             if any of the images could not be found
+	 * @since 1.2
+	 */
+	public static GSprite getSequentialSprite(String prefix, int start,
+			int end, String suffix) {
+		return new GSprite(getSequentialImages(prefix, start, end, suffix));
+	}
+
+	/**
+	 * Craetes a sprite with the image with the given filename from the default
+	 * cache. If the object does not yet exist, it will be cached and returned.
+	 * 
+	 * @param fileName
+	 *            the relevant file name
+	 * @return the generated object
+	 */
+	public static GSprite getSprite(String fileName) {
+		return new GSprite(defaultCache.get(fileName));
+	}
+
+	/**
+	 * Sets the default image cache.
+	 * 
+	 * @param defaultCache
+	 *            the default image cache
+	 */
+	public static void setDefaultCache(ImageCache defaultCache) {
+		ImageCache.defaultCache = defaultCache;
+	}
+
+	/**
 	 * The cache of file names to objects.
 	 */
 	private final WeakHashMap<String, BufferedImage> cache;
@@ -89,7 +195,8 @@ public class ImageCache {
 	private String prefix;
 
 	/**
-	 * Creates the image cache with no prefix.
+	 * Creates the image cache with no prefix, and sets the cache as the default
+	 * cache.
 	 * 
 	 * @param clazz
 	 *            the main game class to which this cache applies
@@ -101,7 +208,8 @@ public class ImageCache {
 	}
 
 	/**
-	 * Creates the image cache with the given filename prefix.
+	 * Creates the image cache with the given filename prefix, and sets the
+	 * cache as the default cache.
 	 * 
 	 * @param clazz
 	 *            the main game class to which this cache applies
@@ -126,6 +234,9 @@ public class ImageCache {
 
 		// Set the prefix.
 		setPrefix(prefix == null ? new String() : prefix);
+
+		// Assign as default cache.
+		defaultCache = this;
 	}
 
 	/**
