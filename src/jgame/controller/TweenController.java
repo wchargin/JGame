@@ -1,5 +1,6 @@
 package jgame.controller;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -37,6 +38,12 @@ public abstract class TweenController extends Object implements Controller {
 	 * The controller that will be attached after this one.
 	 */
 	private TweenController next;
+
+	/**
+	 * The list of tween controllers that will be run with (beginning at the
+	 * same time as) this one.
+	 */
+	private List<TweenController> with = new ArrayList<TweenController>();
 
 	/**
 	 * Creates the controller with the given duration and a linear interpolation
@@ -137,6 +144,19 @@ public abstract class TweenController extends Object implements Controller {
 			return;
 		}
 
+		// Is this our first run?
+		if (tick == 0) {
+			// We may have other tweens that should be run at the same time.
+			for (TweenController tween : with) {
+				// Add the controller.
+				target.addController(tween);
+
+				// Since it won't be invoked until next frame (and will be one
+				// frame off), invoke it manually to get it on track.
+				tween.controlObject(target, context);
+			}
+		}
+
 		// Interpolate!
 		interpolate(target, context,
 				interpolationType.calculateInterpolation(tick, duration));
@@ -202,6 +222,49 @@ public abstract class TweenController extends Object implements Controller {
 	 */
 	public void unchain() {
 		next = null;
+	}
+
+	/**
+	 * Calls {@link #with(TweenController)} on all given items. This sets each
+	 * given tween to start with this tween. That is, when this tween starts,
+	 * the other tweens will start as well.
+	 * 
+	 * @param tweens
+	 *            a list of tween that should start with this tween
+	 */
+	public void with(List<TweenController> tweens) {
+		for (TweenController tween : tweens) {
+			with(tween);
+		}
+	}
+
+	/**
+	 * Sets the given tween to start with this tween. That is, when this tween
+	 * starts, the other tween will start as well.
+	 * 
+	 * @param tween
+	 *            a tween that should start with this tween
+	 */
+	public void with(TweenController tween) {
+		// Check if we already have it.
+		if (!with.contains(tween)) {
+			// Add.
+			with.add(tween);
+		}
+	}
+
+	/**
+	 * Calls {@link #with(TweenController)} on all the given items. This sets
+	 * each given tween to start with this tween. That is, when this tween
+	 * starts, the other tweens will start as well.
+	 * 
+	 * @param tweens
+	 *            an array of tweens that should start with this tween
+	 */
+	public void with(TweenController... tweens) {
+		for (TweenController tween : tweens) {
+			with(tween);
+		}
 	}
 
 }
