@@ -195,7 +195,7 @@ public class GObject implements GPaintable, GObjectHolder {
 	 * @param y
 	 *            the new y-position of the object
 	 */
-    public void addAt(GObject object, double x, double y) {
+	public void addAt(GObject object, double x, double y) {
 		add(object);
 		object.setLocation(x, y);
 	}
@@ -1097,8 +1097,15 @@ public class GObject implements GPaintable, GObjectHolder {
 		// g.setClip(c);
 
 		// Account for alpha.
+		double desiredAlpha = 1;
+
+		// Cascade up parent stack, multiplying.
+		for (GObject t = this; t != null; t = t.getParent()) {
+			desiredAlpha *= t.alpha;
+		}
+
 		g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER,
-				(float) alpha));
+				(float) desiredAlpha));
 
 		// Account for rotation, scale.
 		g.transform(getTransform(false));
