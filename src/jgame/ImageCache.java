@@ -126,7 +126,56 @@ public class ImageCache {
 	 */
 	public static List<Image> getSequentialImages(String prefix, int start,
 			int end, String suffix) {
-		return defaultCache.getSequential(prefix, start, end, suffix);
+		return getSequentialImages(prefix, start, end, suffix, 0);
+	}
+
+	/**
+	 * Gets the images in sequential order from the default cache. This method
+	 * includes a given number of leading zeroes. For example, a set of images
+	 * named {@code image09.png} , {@code image10.png}, and {@code image11.png}
+	 * could be retrieved with a call to:
+	 * 
+	 * <pre>
+	 * getSequential(&quot;image&quot;, 9, 11, &quot;.png&quot;, 1);
+	 * </pre>
+	 * 
+	 * This can be passed directly to a {@link GSprite}
+	 * {@linkplain GSprite#GSprite(List) constructor} to create an animated
+	 * sprite:
+	 * 
+	 * <pre>
+	 * GSprite spr = new GSprite(cache.getSequential(&quot;image&quot;, 9, 11, &quot;.png&quot;, 1));
+	 * </pre>
+	 * 
+	 * @param prefix
+	 *            the prefix before the numbers
+	 * @param start
+	 *            the number to start at (inclusive)
+	 * @param end
+	 *            the number to end at (inclusive)
+	 * @param suffix
+	 *            the suffix after the numbers (should include file extension)
+	 * @param zeroDecimal
+	 *            the decimal place to be zero-filled use this if you have
+	 *            images labeled, for example, {@code image0001.png} instead of
+	 *            just {@code image1.png}. The precise handling of leading
+	 *            zeroes is such that the numbered portion of the file name will
+	 *            always have length greater than this argument. For example,
+	 *            with this argument set to {@code 2}, the number {@code 7}
+	 *            would be transformed to {@code 007} and {@code 81} would
+	 *            become {@code 081}, while {@code 123} and {@code 5678} would
+	 *            be unaffected. You can think of this argument as the number of
+	 *            zeroes to prepend to any single digit number to force the
+	 *            resultant string into a valid format.
+	 * @return a list of the images matching the criteria
+	 * @throws IllegalArgumentException
+	 *             if any of the images could not be found
+	 * @since 1.2
+	 */
+	public static List<Image> getSequentialImages(String prefix, int start,
+			int end, String suffix, int zeroDecimal) {
+		return defaultCache.getSequential(prefix, start, end, suffix,
+				zeroDecimal);
 	}
 
 	/**
@@ -154,7 +203,48 @@ public class ImageCache {
 	 */
 	public static GSprite getSequentialSprite(String prefix, int start,
 			int end, String suffix) {
-		return new GSprite(getSequentialImages(prefix, start, end, suffix));
+		return getSequentialSprite(prefix, start, end, suffix, 0);
+	}
+
+	/**
+	 * Creates a sprite with the images in sequential order. This method does
+	 * not include leading zeroes. For example, a sprite with the set of images
+	 * named {@code image1.png}, {@code image2.png}, and {@code image3.png}
+	 * could be retrieved with a call to:
+	 * 
+	 * <pre>
+	 * getSequentialSprite(&quot;image&quot;, 1, 3, &quot;.png&quot;);
+	 * </pre>
+	 * 
+	 * @param prefix
+	 *            the prefix before the numbers
+	 * @param start
+	 *            the number to start at (inclusive)
+	 * @param end
+	 *            the number to end at (inclusive)
+	 * @param suffix
+	 *            the suffix after the numbers (should include file extension)
+	 * @param zeroDecimal
+	 *            the decimal place to be zero-filled use this if you have
+	 *            images labeled, for example, {@code image0001.png} instead of
+	 *            just {@code image1.png}. The precise handling of leading
+	 *            zeroes is such that the numbered portion of the file name will
+	 *            always have length greater than this argument. For example,
+	 *            with this argument set to {@code 2}, the number {@code 7}
+	 *            would be transformed to {@code 007} and {@code 81} would
+	 *            become {@code 081}, while {@code 123} and {@code 5678} would
+	 *            be unaffected. You can think of this argument as the number of
+	 *            zeroes to prepend to any single digit number to force the
+	 *            resultant string into a valid format.
+	 * @return a list of the images matching the criteria
+	 * @throws IllegalArgumentException
+	 *             if any of the images could not be found
+	 * @since 1.2
+	 */
+	public static GSprite getSequentialSprite(String prefix, int start,
+			int end, String suffix, int zeroDecimal) {
+		return new GSprite(getSequentialImages(prefix, start, end, suffix,
+				zeroDecimal));
 	}
 
 	/**
@@ -298,9 +388,11 @@ public class ImageCache {
 
 	/**
 	 * Gets the images in sequential order. This method does not include leading
-	 * zeroes. For example, a set of images named {@code image1.png},
-	 * {@code image2.png}, and {@code image3.png} could be retrieved with a call
-	 * to:
+	 * zeroes and is equivalent to calling
+	 * {@link #getSequential(String, int, int, String, int)} with a
+	 * {@code zeroDecimal} argument of {@code 0}. For example, a set of images
+	 * named {@code image1.png}, {@code image2.png}, and {@code image3.png}
+	 * could be retrieved with a call to:
 	 * 
 	 * <pre>
 	 * getSequential(&quot;image&quot;, 1, 3, &quot;.png&quot;);
@@ -329,12 +421,67 @@ public class ImageCache {
 	 */
 	public List<Image> getSequential(String prefix, int start, int end,
 			String suffix) throws IllegalArgumentException {
+		return getSequential(prefix, start, end, suffix, 0);
+	}
+
+	/**
+	 * Gets the images in sequential order. This method includes a given number
+	 * of leading zeroes. For example, a set of images named {@code image09.png}
+	 * , {@code image10.png}, and {@code image11.png} could be retrieved with a
+	 * call to:
+	 * 
+	 * <pre>
+	 * getSequential(&quot;image&quot;, 9, 11, &quot;.png&quot;, 1);
+	 * </pre>
+	 * 
+	 * This can be passed directly to a {@link GSprite}
+	 * {@linkplain GSprite#GSprite(List) constructor} to create an animated
+	 * sprite:
+	 * 
+	 * <pre>
+	 * GSprite spr = new GSprite(cache.getSequential(&quot;image&quot;, 9, 11, &quot;.png&quot;, 1));
+	 * </pre>
+	 * 
+	 * @param prefix
+	 *            the prefix before the numbers
+	 * @param start
+	 *            the number to start at (inclusive)
+	 * @param end
+	 *            the number to end at (inclusive)
+	 * @param suffix
+	 *            the suffix after the numbers (should include file extension)
+	 * @param zeroDecimal
+	 *            the decimal place to be zero-filled use this if you have
+	 *            images labeled, for example, {@code image0001.png} instead of
+	 *            just {@code image1.png}. The precise handling of leading
+	 *            zeroes is such that the numbered portion of the file name will
+	 *            always have length greater than this argument. For example,
+	 *            with this argument set to {@code 2}, the number {@code 7}
+	 *            would be transformed to {@code 007} and {@code 81} would
+	 *            become {@code 081}, while {@code 123} and {@code 5678} would
+	 *            be unaffected. You can think of this argument as the number of
+	 *            zeroes to prepend to any single digit number to force the
+	 *            resultant string into a valid format.
+	 * @return a list of the images matching the criteria
+	 * @throws IllegalArgumentException
+	 *             if any of the images could not be found
+	 * @since 1.2
+	 */
+	public List<Image> getSequential(String prefix, int start, int end,
+			String suffix, int zeroDecimal) throws IllegalArgumentException {
 		// Create the list to be returned.
 		List<Image> result = new ArrayList<Image>();
 
 		// Process each one.
 		for (int i = start; i <= end; i++) {
-			result.add(get(prefix + Integer.toString(i) + suffix));
+			String numberPortion = Integer.toString(i);
+
+			// Prepend leading zeroes.
+			while (numberPortion.length() <= zeroDecimal) {
+				numberPortion = '0' + numberPortion;
+			}
+
+			result.add(get(prefix + numberPortion + suffix));
 		}
 
 		// Return.
