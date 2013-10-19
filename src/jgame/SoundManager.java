@@ -168,6 +168,18 @@ public class SoundManager {
 	}
 
 	/**
+	 * Starts a sound with the given name from the default cache. The sound will
+	 * loop forever.
+	 * 
+	 * @param name
+	 *            the filename of the clip to play
+	 * @return a sound reference; you can use this to stop the sound
+	 */
+	public static Sound loopSoundForever(String name) {
+		return defaultCache.loopForever(name);
+	}
+
+	/**
 	 * Stops all sounds currently playing.
 	 */
 	public static void stopAllSounds() {
@@ -222,7 +234,13 @@ public class SoundManager {
 	private static final Map<Class<?>, SoundManager> caches = new HashMap<Class<?>, SoundManager>();
 
 	/**
-	 * Creates and returns a sound manager.
+	 * The default sound manager, used for static convenience methods.
+	 */
+	private static SoundManager defaultCache;
+
+	/**
+	 * Creates and returns a sound manager, and sets the cache as the default
+	 * cache.
 	 * 
 	 * @param clazz
 	 *            the main game class to which this cache applies
@@ -236,7 +254,8 @@ public class SoundManager {
 	}
 
 	/**
-	 * Creates and returns a sound manager with the given filename prefix.
+	 * Creates and returns a sound manager with the given filename prefix, and
+	 * sets the cache as the default cache.
 	 * 
 	 * @param clazz
 	 *            the main game class to which this cache applies
@@ -259,6 +278,44 @@ public class SoundManager {
 	}
 
 	/**
+	 * Starts a sound with the given name from the default cache. The sound will
+	 * play once.
+	 * 
+	 * @param name
+	 *            the filename of the clip to play
+	 * @return a sound reference; you can use this to stop the clip before it
+	 *         has finished
+	 */
+	public static Sound playSound(String name) {
+		return defaultCache.play(name);
+	}
+
+	/**
+	 * Preloads the given sound from the default cache, but does not play it.
+	 * The sound can be played later with the {@link #play(String)} method.
+	 * 
+	 * @param name
+	 *            the filename of the clip to play
+	 * @return {@code true} if the preloading succeeded or has already been
+	 *         performed successfully, or {@code false} if it failed
+	 */
+	public static boolean preloadSound(String name) {
+		return defaultCache.preload(name);
+	}
+
+	/**
+	 * Preloads the given sound from the default cache asynchronously. This
+	 * method will not block; that is, it will not wait for the sound to load
+	 * before returning.
+	 * 
+	 * @param name
+	 *            the filename of the sound to preload
+	 */
+	public static synchronized void preloadSoundAsync(final String name) {
+		defaultCache.preloadAsync(name);
+	}
+
+	/**
 	 * The list of sound names currently being loaded.
 	 */
 	private final Set<String> currentlyPreloading = new HashSet<String>();
@@ -276,7 +333,8 @@ public class SoundManager {
 	}
 
 	/**
-	 * Creates the sound manager with the given filename prefix.
+	 * Creates the sound manager with the given filename prefix and sets this as
+	 * the default cache.
 	 * 
 	 * @param clazz
 	 *            the main game class to which this cache applies
@@ -290,6 +348,9 @@ public class SoundManager {
 		this.clazz = clazz;
 		setPrefix(prefix);
 		byteCache = new HashMap<String, ByteArrayInputStream>();
+
+		// Assign as default cache.
+		defaultCache = this;
 	}
 
 	/**
