@@ -218,6 +218,22 @@ public class GSprite extends GObject implements GAnimatable, ImageObserver {
 	}
 
 	/**
+	 * Creates a new sprite by copying all the properties from another sprite.
+	 * 
+	 * @param other
+	 *            the sprite whose properties to copy
+	 */
+	public GSprite(GSprite other) {
+		super();
+		this.images = new ArrayList<Image>(other.images);
+		this.nineSliceCenter = other.nineSliceCenter == null ? null
+				: new Rectangle(other.nineSliceCenter);
+		this.primitive = other.primitive;
+		this.frame = other.frame;
+		this.playing = other.playing;
+	}
+
+	/**
 	 * Creates the sprite with the given image.
 	 * 
 	 * @param image
