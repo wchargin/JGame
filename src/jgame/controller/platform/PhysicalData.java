@@ -102,6 +102,10 @@ public class PhysicalData {
 	 *            the new friction value
 	 */
 	public void setFriction(double friction) {
+		if (friction < 0 || friction > 1) {
+			throw new IllegalArgumentException(
+					"friction must be between 0 and 1, but is " + friction);
+		}
 		this.friction = friction;
 	}
 
@@ -113,6 +117,10 @@ public class PhysicalData {
 	 *            the new solidity value
 	 */
 	public void setSolidity(double solidity) {
+		if (solidity < 0 || solidity > 1) {
+			throw new IllegalArgumentException(
+					"solidity must be between 0 and 1, but is " + solidity);
+		}
 		this.solidity = solidity;
 	}
 
@@ -124,6 +132,10 @@ public class PhysicalData {
 	 *            the new springiness value
 	 */
 	public void setSpringiness(double springiness) {
+		if (springiness < 0) {
+			throw new IllegalArgumentException(
+					"springiness must be non-negative, but is " + springiness);
+		}
 		this.springiness = springiness;
 	}
 
@@ -135,6 +147,10 @@ public class PhysicalData {
 	 *            the new traction value
 	 */
 	public void setTraction(double traction) {
+		if (traction < 0) {
+			throw new IllegalArgumentException(
+					"traction must be non-negative, but is " + traction);
+		}
 		this.traction = traction;
 	}
 
