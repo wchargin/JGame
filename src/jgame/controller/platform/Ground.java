@@ -1,12 +1,14 @@
 package jgame.controller.platform;
 
+import jgame.GPaintable;
+
 /**
  * A physical object that can act as ground in a physics-powered game.
  * 
  * @author William Chargin
  * 
  */
-public interface Ground {
+public interface Ground extends GPaintable {
 
 	/**
 	 * Gets the {@code y}-position for the top of the surface at a given
